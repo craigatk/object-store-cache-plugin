@@ -36,6 +36,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-modules-
 
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
       - name: Build
         env:
           PROJEKTOR_TOKEN: ${{ secrets.PROJEKTOR_TOKEN }}
