@@ -8,6 +8,7 @@ import spock.lang.Specification
 import spock.lang.Subject
 
 class ObjectStoreBuildCacheServiceFactorySpec extends Specification {
+
     @Subject
     ObjectStoreBuildCacheServiceFactory objectStoreBuildCacheServiceFactory = new ObjectStoreBuildCacheServiceFactory()
 
