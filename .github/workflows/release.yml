@@ -42,6 +42,8 @@ jobs:
       - name: Build
         env:
           PROJEKTOR_TOKEN: ${{ secrets.PROJEKTOR_TOKEN }}
+          CACHE_ACCESS_KEY: ${{ secrets.CACHE_ACCESS_KEY }}
+          CACHE_ACCESS_SECRET: ${{ secrets.CACHE_ACCESS_SECRET }}
         run: ./gradlew build
 
       - name: Publish plugin

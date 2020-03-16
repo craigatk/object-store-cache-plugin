@@ -6,6 +6,7 @@ import spock.lang.Subject
 import spock.util.concurrent.PollingConditions
 
 class ObjectStoreClientSpec extends Specification {
+
     @Subject
     ObjectStoreClient objectStoreClient = new ObjectStoreClient(
             "http://localhost:9000",

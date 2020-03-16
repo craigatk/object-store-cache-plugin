@@ -14,25 +14,19 @@ update the documentation / work through issues accordingly.
 First, apply the plugin in `settings.gradle`
 
 ```
-buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath "gradle.plugin.com.atkinsondev.gradle:object-store-cache-plugin:<version>"
-  }
+plugins {
+    id "com.atkinsondev.object-store-cache" version "<version>"
 }
-
-apply plugin: apply plugin: "com.atkinsondev.object-store-cache"
 ```
+
+For the current version, please see https://github.com/craigatk/object-store-cache-plugin/releases
 
 ### Configure build cache
 
 Then configure Gradle's build caches and add the object store remote cache in `settings.gradle`
 
 ```
+// Use whichever environment variable is set by your CI system
 boolean isCI = Boolean.valueOf(System.getenv("GITHUB_ACTIONS"))
 
 buildCache {
@@ -41,12 +35,20 @@ buildCache {
     }
     remote(com.atkinsondev.cache.ObjectStoreBuildCache) {
         endpoint = '<endpoint>'
-        accessKey = '<access_key>'
-        secretKey = '<secret_key>'
+        accessKey = System.getenv("CACHE_ACCESS_KEY") ?: cache_access_key
+        secretKey = System.getenv("CACHE_SECRET_KEY") ?: cache_secret_key
         bucket = '<bucket_name>'
         push = isCI
     }
 }
+```
+
+Then you can pass in the access key and secret key either with those environment variables
+or store them in `~/.gradle/gradle.properties` outside source control with those property names.
+
+```
+cache_access_key=<your_access_key>
+cache_secret_key=<your_secret_key>
 ```
 
 ### Configuration properties

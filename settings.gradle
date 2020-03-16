@@ -1,0 +1,19 @@
+plugins {
+    id "com.atkinsondev.object-store-cache" version "0.0.1"
+}
+
+boolean isCI = Boolean.valueOf(System.getenv("GITHUB_ACTIONS"))
+
+buildCache {
+    local {
+        enabled = !isCI
+    }
+    remote(com.atkinsondev.cache.ObjectStoreBuildCache) {
+        endpoint = 'sfo2.digitaloceanspaces.com'
+        accessKey = System.getenv("CACHE_ACCESS_KEY") ?: cache_access_key
+        secretKey = System.getenv("CACHE_SECRET_KEY") ?: cache_secret_key
+        bucket = 'cacheplugin'
+        autoCreateBucket = true
+        push = isCI
+    }
+}
