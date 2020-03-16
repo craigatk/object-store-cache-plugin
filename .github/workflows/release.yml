@@ -1,0 +1,45 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0.0
+
+name: Release Gradle plugin
+
+jobs:
+  build:
+    name: Publish Gradle plugin release
+    runs-on: ubuntu-18.04
+    services:
+      objectstorage:
+        image: bitnami/minio:2020.2.20-debian-10-r1
+        ports:
+          - "9000:9000"
+        volumes:
+          - ./minio:/data
+        env:
+          MINIO_ACCESS_KEY: minio_access_key
+          MINIO_SECRET_KEY: minio_secret_key
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches/modules-2
+          key: ${{ runner.os }}-gradle-modules-${{ hashFiles('**/*gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-modules-
+
+      - name: Build
+        env:
+          PROJEKTOR_TOKEN: ${{ secrets.PROJEKTOR_TOKEN }}
+        run: ./gradlew build
+
+      - name: Publish plugin
+        run: ./gradlew publishPlugin -Pgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }}
