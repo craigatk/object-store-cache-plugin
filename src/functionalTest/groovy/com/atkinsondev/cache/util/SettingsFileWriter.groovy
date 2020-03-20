@@ -17,4 +17,22 @@ class SettingsFileWriter {
 
         return settingsFile
     }
+
+    static void writeBuildCacheConfig(File settingsFile, String endpoint, String bucketName) {
+        settingsFile << """
+        buildCache {
+            local {
+                enabled = false
+            }
+            remote(com.atkinsondev.cache.ObjectStoreBuildCache) {
+                endpoint = '${endpoint}'
+                accessKey = 'minio_access_key'
+                secretKey = 'minio_secret_key'
+                bucket = '${bucketName}'
+                autoCreateBucket = true
+                push = true
+            }
+        }
+        """.stripIndent()
+    }
 }

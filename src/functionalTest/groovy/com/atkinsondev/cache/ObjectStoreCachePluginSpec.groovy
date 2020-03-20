@@ -22,40 +22,29 @@ class ObjectStoreCachePluginSpec extends Specification {
 
     String bucketName = "testbucket"
 
+    File sourceDirectory
+    File testDirectory
+
     def setup() {
         BuildFileWriter.writeBuildFile(projectDir)
 
         pluginClasspathData = new PluginClasspathLoader().loadPluginClasspath()
 
         settingsFile = SettingsFileWriter.writeSettingsFile(projectDir, pluginClasspathData.pluginClasspath)
+
+        sourceDirectory = SourceFileWriter.createSourceDirectory(projectDir)
+        testDirectory = SourceFileWriter.createTestDirectory(projectDir)
     }
 
     def "when re-using cached source class files in second build with tests should work"() {
         given:
-        File sourceDirectory = SourceFileWriter.createSourceDirectory(projectDir)
-        File testDirectory = SourceFileWriter.createTestDirectory(projectDir)
-
         String randomPieceOfClassNameForUniqueness = RandomStringUtils.randomAlphabetic(12)
         String sourceClassName = "Sample${randomPieceOfClassNameForUniqueness}"
 
         SourceFileWriter.writeSourceFile(sourceDirectory, sourceClassName)
         SourceFileWriter.writeSpecFile(testDirectory, sourceClassName)
 
-        settingsFile << """
-        buildCache {
-            local {
-                enabled = false
-            }
-            remote(com.atkinsondev.cache.ObjectStoreBuildCache) {
-                endpoint = 'http://localhost:9000'
-                accessKey = 'minio_access_key'
-                secretKey = 'minio_secret_key'
-                bucket = '${bucketName}'
-                autoCreateBucket = true
-                push = true
-            }
-        }
-        """.stripIndent()
+        SettingsFileWriter.writeBuildCacheConfig(settingsFile, 'http://localhost:9000', bucketName)
 
         when:
         def compileGroovyResult = GradleRunner.create()
@@ -88,5 +77,37 @@ class ObjectStoreCachePluginSpec extends Specification {
         then:
         testFromCacheResult.task(":compileGroovy").outcome == TaskOutcome.FROM_CACHE
         testFromCacheResult.task(":test").outcome == TaskOutcome.FROM_CACHE
+    }
+
+    def "when connecting to object store host fails should disable cache and not fail build"() {
+        given:
+        String randomPieceOfClassNameForUniqueness = RandomStringUtils.randomAlphabetic(12)
+        String sourceClassName = "Sample${randomPieceOfClassNameForUniqueness}"
+
+        SourceFileWriter.writeSourceFile(sourceDirectory, sourceClassName)
+        SourceFileWriter.writeSpecFile(testDirectory, sourceClassName)
+
+        SettingsFileWriter.writeBuildCacheConfig(settingsFile, 'http://invalidhostname', bucketName)
+
+        when:
+        def compileGroovyResult = GradleRunner.create()
+                .withProjectDir(projectDir.root)
+                .withArguments('compileGroovy', '--build-cache', '--stacktrace')
+                .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
+                .build()
+
+        then:
+        compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
+
+        when:
+        def testExecutedResult = GradleRunner.create()
+                .withProjectDir(projectDir.root)
+                .withArguments('clean', 'test', '--build-cache')
+                .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
+                .build()
+
+        then:
+        testExecutedResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
+        testExecutedResult.task(":test").outcome == TaskOutcome.SUCCESS
     }
 }
