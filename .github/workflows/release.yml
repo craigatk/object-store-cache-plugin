@@ -47,4 +47,8 @@ jobs:
         run: ./gradlew build
 
       - name: Publish plugin
+        env:
+          PROJEKTOR_TOKEN: ${{ secrets.PROJEKTOR_TOKEN }}
+          CACHE_ACCESS_KEY: ${{ secrets.CACHE_ACCESS_KEY }}
+          CACHE_SECRET_KEY: ${{ secrets.CACHE_SECRET_KEY }}
         run: ./gradlew publishPlugin -Pgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PUBLISH_SECRET }}
