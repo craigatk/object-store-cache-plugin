@@ -26,6 +26,10 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
             } else if (!objectStoreClient.bucketExists(objectStoreBuildCache.bucket)) {
                 throw BucketMissingException(objectStoreBuildCache.bucket)
             }
+
+            objectStoreBuildCache.expirationInDays?.let {
+                objectStoreClient.setBucketExpiration(objectStoreBuildCache.bucket, it)
+            }
         }
 
         return maybeBuildCacheService

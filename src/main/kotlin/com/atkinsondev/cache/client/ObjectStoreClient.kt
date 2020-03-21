@@ -37,4 +37,10 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
             } catch (e: ErrorResponseException) {
                 null
             }
+
+    fun setBucketExpiration(bucketName: String, expirationInDays: Int) {
+        val lifecycle = "<LifecycleConfiguration><Rule><ID>expire-bucket</ID><Prefix></Prefix><Status>Enabled</Status>" +
+                "<Expiration><Days>$expirationInDays</Days></Expiration></Rule></LifecycleConfiguration>"
+        minioClient.setBucketLifeCycle(bucketName, lifecycle)
+    }
 }

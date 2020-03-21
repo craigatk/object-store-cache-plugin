@@ -62,4 +62,5 @@ All the plugin configuration properties:
 | secretKey               | `String`  | yes      |         | Object store secret key |
 | bucket                  | `String`  | yes      |         | Bucket name to store the cache files |
 | autoCreateBucket        | `boolean` | no       | `false` | Whether to automatically create the bucket if it does not exist |
+| expirationInDays        | `int`     | no       |         | Configure the bucket's lifecycle policy to expire objects when they are this many days old |
 | region                  | `String`  | no       | `null`  | Region where the bucket resides (if supported by backend) |          
