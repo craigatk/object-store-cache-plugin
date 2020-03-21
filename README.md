@@ -19,7 +19,7 @@ plugins {
 }
 ```
 
-For the current version, please see https://github.com/craigatk/object-store-cache-plugin/releases
+For the current version, please see https://plugins.gradle.org/plugin/com.atkinsondev.object-store-cache
 
 ### Configure build cache
 
