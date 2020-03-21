@@ -51,10 +51,10 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://github.com/craigatk/object-store-gradle-cache'
-    vcsUrl = 'https://github.com/craigatk/object-store-gradle-cache'
+    website = 'https://github.com/craigatk/object-store-cache-plugin'
+    vcsUrl = 'https://github.com/craigatk/object-store-cache-plugin'
     description = 'Use an S3-compatible object store as a Gradle build cache backend'
-    tags = ['cache']
+    tags = ['build-cache']
 
     plugins {
         objectStoreCachePlugin {
@@ -68,7 +68,7 @@ repositories {
 }
 
 group = "com.atkinsondev.gradle"
-version = "0.0.5"
+version = "0.0.6"
 
 dependencies {
     implementation 'io.minio:minio:6.0.13'
@@ -97,6 +97,10 @@ task functionalTest(type: Test) {
     group = 'verification'
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
+
+    testLogging {
+        exceptionFormat = 'full'
+    }
 }
 check.dependsOn functionalTest
 
