@@ -18,7 +18,7 @@ class SettingsFileWriter {
         return settingsFile
     }
 
-    static void writeBuildCacheConfig(File settingsFile, String endpoint, String bucketName) {
+    static void writeBuildCacheConfig(File settingsFile, String endpoint, String bucketName, String additionalConfig = "") {
         settingsFile << """
         buildCache {
             local {
@@ -31,6 +31,7 @@ class SettingsFileWriter {
                 bucket = '${bucketName}'
                 autoCreateBucket = true
                 push = true
+                ${additionalConfig}
             }
         }
         """.stripIndent()

@@ -1,18 +1,23 @@
 package com.atkinsondev.cache
 
-import com.atkinsondev.cache.util.SettingsFileWriter
-import com.atkinsondev.cache.util.SourceFileWriter
+import com.atkinsondev.cache.util.*
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 
-class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
-    String bucketName = "testbucket"
+class ObjectStoreCachePluginExpirationSpec extends ObjectStoreCachePluginSpecCase {
 
-    def "when re-using cached source class files in second build with tests should work"() {
+    def "when expiration specified should set expiration date"() {
         given:
+        String bucketName = "expirationbucket"
+
         SourceFileWriter.writeSourceAndSpecFiles(sourceDirectory, testDirectory)
 
-        SettingsFileWriter.writeBuildCacheConfig(settingsFile, endpoint, bucketName)
+        SettingsFileWriter.writeBuildCacheConfig(
+                settingsFile,
+                endpoint,
+                bucketName,
+                "expirationInDays = 30"
+        )
 
         when:
         def compileGroovyResult = GradleRunner.create()
@@ -36,27 +41,29 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
         testExecutedResult.task(":test").outcome == TaskOutcome.SUCCESS
 
         when:
-        def testFromCacheResult = GradleRunner.create()
-                .withProjectDir(projectDir.root)
-                .withArguments('clean', 'test', '--build-cache')
-                .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
-                .build()
+        String bucketLifecycle = minioClient.getBucketLifeCycle(bucketName)
 
         then:
-        testFromCacheResult.task(":compileGroovy").outcome == TaskOutcome.FROM_CACHE
-        testFromCacheResult.task(":test").outcome == TaskOutcome.FROM_CACHE
+        bucketLifecycle.contains("<Expiration><Days>30</Days></Expiration>")
     }
 
-    def "when connecting to object store host fails should disable cache and not fail build"() {
+    def "when no expiration specified should not set expiration date"() {
         given:
+        String bucketName = "noexpirationbucket"
+
         SourceFileWriter.writeSourceAndSpecFiles(sourceDirectory, testDirectory)
 
-        SettingsFileWriter.writeBuildCacheConfig(settingsFile, 'http://invalidhostname', bucketName)
+        SettingsFileWriter.writeBuildCacheConfig(
+                settingsFile,
+                endpoint,
+                bucketName,
+                ""
+        )
 
         when:
         def compileGroovyResult = GradleRunner.create()
                 .withProjectDir(projectDir.root)
-                .withArguments('compileGroovy', '--build-cache', '--stacktrace')
+                .withArguments('compileGroovy', '--build-cache')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
                 .build()
 
@@ -64,14 +71,9 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
         compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
 
         when:
-        def testExecutedResult = GradleRunner.create()
-                .withProjectDir(projectDir.root)
-                .withArguments('clean', 'test', '--build-cache')
-                .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
-                .build()
+        String bucketLifecycle = minioClient.getBucketLifeCycle(bucketName)
 
         then:
-        testExecutedResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
-        testExecutedResult.task(":test").outcome == TaskOutcome.SUCCESS
+        bucketLifecycle.isEmpty()
     }
 }
