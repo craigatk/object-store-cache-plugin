@@ -14,7 +14,7 @@ buildCache {
         secretKey = System.getenv("CACHE_SECRET_KEY") ?: cache_secret_key
         bucket = 'cacheplugin'
         autoCreateBucket = true
-        expirationInDays = 3
+        expirationInDays = 10
         push = isCI
     }
 }
