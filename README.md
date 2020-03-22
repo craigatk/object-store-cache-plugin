@@ -43,6 +43,10 @@ buildCache {
 }
 ```
 
+As an example, this plugin's build uses the build cache plugin itself: https://github.com/craigatk/object-store-cache-plugin/blob/master/settings.gradle
+
+#### Local credentials
+
 Then you can pass in the access key and secret key either with those environment variables
 or store them in `~/.gradle/gradle.properties` outside source control with those property names.
 
