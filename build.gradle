@@ -68,7 +68,7 @@ repositories {
 }
 
 group = "com.atkinsondev.gradle"
-version = "0.0.6"
+version = "1.0.0"
 
 dependencies {
     implementation 'io.minio:minio:6.0.13'
