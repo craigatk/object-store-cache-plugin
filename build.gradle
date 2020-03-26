@@ -98,6 +98,8 @@ task functionalTest(type: Test) {
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
 
+    maxParallelForks = Math.floorDiv(Runtime.runtime.availableProcessors(), 2) + 1
+
     testLogging {
         exceptionFormat = 'full'
     }

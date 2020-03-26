@@ -12,7 +12,13 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
         given:
         SourceFileWriter.writeSourceAndSpecFiles(sourceDirectory, testDirectory)
 
-        SettingsFileWriter.writeBuildCacheConfig(settingsFile, endpoint, bucketName)
+        SettingsFileWriter.writeBuildCacheConfig(
+                settingsFile,
+                endpoint,
+                bucketName,
+                accessKey,
+                secretKey
+        )
 
         when:
         def compileGroovyResult = GradleRunner.create()
@@ -20,6 +26,8 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
                 .withArguments('compileGroovy', '--build-cache')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
                 .build()
+
+        println compileGroovyResult.output
 
         then:
         compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
@@ -30,6 +38,8 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
                 .withArguments('clean', 'test', '--build-cache')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
                 .build()
+
+        println testExecutedResult
 
         then:
         testExecutedResult.task(":compileGroovy").outcome == TaskOutcome.FROM_CACHE
@@ -45,33 +55,5 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
         then:
         testFromCacheResult.task(":compileGroovy").outcome == TaskOutcome.FROM_CACHE
         testFromCacheResult.task(":test").outcome == TaskOutcome.FROM_CACHE
-    }
-
-    def "when connecting to object store host fails should disable cache and not fail build"() {
-        given:
-        SourceFileWriter.writeSourceAndSpecFiles(sourceDirectory, testDirectory)
-
-        SettingsFileWriter.writeBuildCacheConfig(settingsFile, 'http://invalidhostname', bucketName)
-
-        when:
-        def compileGroovyResult = GradleRunner.create()
-                .withProjectDir(projectDir.root)
-                .withArguments('compileGroovy', '--build-cache', '--stacktrace')
-                .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
-                .build()
-
-        then:
-        compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
-
-        when:
-        def testExecutedResult = GradleRunner.create()
-                .withProjectDir(projectDir.root)
-                .withArguments('clean', 'test', '--build-cache')
-                .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
-                .build()
-
-        then:
-        testExecutedResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
-        testExecutedResult.task(":test").outcome == TaskOutcome.SUCCESS
     }
 }
