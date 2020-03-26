@@ -11,10 +11,17 @@ private val logger = KotlinLogging.logger {}
 
 class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStoreBuildCache> {
     override fun createBuildCacheService(objectStoreBuildCache: ObjectStoreBuildCache, describer: BuildCacheServiceFactory.Describer): BuildCacheService? {
+        val accessKey = objectStoreBuildCache.accessKey
+        val secretKey = objectStoreBuildCache.secretKey
+        if (accessKey == null || secretKey == null) {
+            logger.error(missingKeysErrorMessage)
+            return null
+        }
+
         val objectStoreClient = ObjectStoreClient(
                 objectStoreBuildCache.endpoint,
-                objectStoreBuildCache.accessKey,
-                objectStoreBuildCache.secretKey,
+                accessKey,
+                secretKey,
                 objectStoreBuildCache.region
         )
 
@@ -47,4 +54,8 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
             logger.error("Error connecting to build cache object store ${objectStoreBuildCache.endpoint}, remote cache disabled", e)
             null
         }
+
+    companion object {
+        const val missingKeysErrorMessage = "Missing access key or secret key, disabling object store remote build cache"
+    }
 }

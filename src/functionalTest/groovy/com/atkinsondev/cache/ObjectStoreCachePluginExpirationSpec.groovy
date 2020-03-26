@@ -16,6 +16,8 @@ class ObjectStoreCachePluginExpirationSpec extends ObjectStoreCachePluginSpecCas
                 settingsFile,
                 endpoint,
                 bucketName,
+                accessKey,
+                secretKey,
                 "expirationInDays = 30"
         )
 
@@ -57,6 +59,8 @@ class ObjectStoreCachePluginExpirationSpec extends ObjectStoreCachePluginSpecCas
                 settingsFile,
                 endpoint,
                 bucketName,
+                accessKey,
+                secretKey,
                 ""
         )
 
