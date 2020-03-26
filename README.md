@@ -29,14 +29,17 @@ Then configure Gradle's build caches and add the object store remote cache in `s
 // Use whichever environment variable is set by your CI system
 boolean isCI = Boolean.valueOf(System.getenv("GITHUB_ACTIONS"))
 
+String cacheAccessKey = System.getenv("CACHE_ACCESS_KEY") ?: properties['cache_access_key'] ?: ''
+String cacheSecretKey = System.getenv("CACHE_SECRET_KEY") ?: properties['cache_secret_key'] ?: ''
+
 buildCache {
     local {
         enabled = !isCI
     }
     remote(com.atkinsondev.cache.ObjectStoreBuildCache) {
         endpoint = '<endpoint>'
-        accessKey = System.getenv("CACHE_ACCESS_KEY") ?: cache_access_key
-        secretKey = System.getenv("CACHE_SECRET_KEY") ?: cache_secret_key
+        accessKey = cacheAccessKey
+        secretKey = cacheSecretKey
         bucket = '<bucket_name>'
         push = isCI
     }
