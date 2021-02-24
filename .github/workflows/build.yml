@@ -10,11 +10,11 @@ jobs:
     runs-on: ubuntu-18.04
     services:
       objectstorage:
-        image: bitnami/minio:2020.2.20-debian-10-r1
+        image: bitnami/minio:2020.8.4-debian-10-r0
         ports:
           - "9000:9000"
         volumes:
-          - ./minio:/data
+          - /tmp:/data
         env:
           MINIO_ACCESS_KEY: minio_access_key
           MINIO_SECRET_KEY: minio_secret_key
