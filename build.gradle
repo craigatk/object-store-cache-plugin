@@ -13,7 +13,7 @@ buildscript {
 plugins {
     id 'java-gradle-plugin'
     id 'maven-publish'
-    id "com.gradle.plugin-publish" version "0.11.0"
+    id "com.gradle.plugin-publish" version "1.1.0"
     id 'groovy'
     id "dev.projektor.publish" version "7.2.3"
     id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
@@ -36,6 +36,8 @@ gradlePlugin {
         objectStoreCachePlugin {
             id = 'com.atkinsondev.object-store-cache'
             implementationClass = 'com.atkinsondev.cache.ObjectStoreCachePlugin'
+            displayName = 'Object store cache plugin'
+            description = "Use an S3-compatible object store as the backend for a Gradle remote build cache"
         }
     }
 }
@@ -45,12 +47,6 @@ pluginBundle {
     vcsUrl = 'https://github.com/craigatk/object-store-cache-plugin'
     description = 'Use an S3-compatible object store as a Gradle build cache backend'
     tags = ['build-cache']
-
-    plugins {
-        objectStoreCachePlugin {
-            displayName = 'Object store cache plugin'
-        }
-    }
 }
 
 repositories {
@@ -58,7 +54,7 @@ repositories {
 }
 
 group = "com.atkinsondev.gradle"
-version = "1.3.0"
+version = "1.3.1"
 
 dependencies {
     implementation 'io.minio:minio:6.0.13'
@@ -107,3 +103,5 @@ task createClasspathManifest {
     }
 }
 test.dependsOn(createClasspathManifest)
+
+tasks.withType(Groovydoc).all { enabled = false }
