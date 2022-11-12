@@ -17,6 +17,7 @@ plugins {
     id 'groovy'
     id "dev.projektor.publish" version "7.2.3"
     id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
+    id "com.atkinsondev.opentelemetry-build" version "1.3.1"
 }
 
 apply plugin: "kotlin"
@@ -105,3 +106,11 @@ task createClasspathManifest {
 test.dependsOn(createClasspathManifest)
 
 tasks.withType(Groovydoc).all { enabled = false }
+
+openTelemetryBuild {
+    endpoint = "https://api.honeycomb.io"
+    headers = [
+            "x-honeycomb-team": System.getenv("HONEYCOMB_API_KEY") ?: project.findProperty('honeycomb_api_key') ?: null,
+            "x-honeycomb-dataset": "otel-gradle"
+    ]
+}
