@@ -62,12 +62,27 @@ cache_secret_key=<your_secret_key>
 
 All the plugin configuration properties:
 
-| Parameter               | Type      | Required | Default | Description                                |
-| ----------------------- | --------- | -------- | ------- | ------------------------------------------ |
-| endpoint                | `String`  | yes      |         | Endpoint of S3-compatible backend |  
-| accessKey               | `String`  | yes      |         | Object store access key |
-| secretKey               | `String`  | yes      |         | Object store secret key |
-| bucket                  | `String`  | yes      |         | Bucket name to store the cache files |
-| autoCreateBucket        | `boolean` | no       | `false` | Whether to automatically create the bucket if it does not exist |
-| expirationInDays        | `int`     | no       |         | Configure the bucket's lifecycle policy to expire objects when they are this many days old |
-| region                  | `String`  | no       | `null`  | Region where the bucket resides (if supported by backend) |          
+| Parameter        | Type      | Required | Default | Description                                                                                |
+|------------------|-----------|----------|---------|--------------------------------------------------------------------------------------------|
+| endpoint         | `String`  | yes      |         | Endpoint of S3-compatible backend                                                          |  
+| accessKey        | `String`  | yes      |         | Object store access key                                                                    |
+| secretKey        | `String`  | yes      |         | Object store secret key                                                                    |
+| bucket           | `String`  | yes      |         | Bucket name to store the cache files                                                       |
+| autoCreateBucket | `boolean` | no       | `false` | Whether to automatically create the bucket if it does not exist                            |
+| expirationInDays | `int`     | no       |         | Configure the bucket's lifecycle policy to expire objects when they are this many days old |
+| region           | `String`  | no       | `null`  | Region where the bucket resides (if supported by backend)                                  |          
+
+## Compatibility
+
+The plugin is compatible with Gradle `6.1.1` and higher.
+
+## Changelog
+
+* 1.3.0
+  * Upgrading Kotlin dependency to 1.6.20 and build to Gradle 7.5.1
+* 1.2.0
+  * Switching from jCenter to Maven Central
+* 1.1.2
+  * Improving error message when access or secret key is missing
+* 1.0.0
+  * Initial release

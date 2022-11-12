@@ -1,6 +1,6 @@
-package com.atkinsondev.cache
+package com.atkinsondev.cache.testkit
 
-import com.atkinsondev.cache.util.*
+import com.atkinsondev.cache.testkit.util.*
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 

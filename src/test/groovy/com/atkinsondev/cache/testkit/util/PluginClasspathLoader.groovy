@@ -1,4 +1,4 @@
-package com.atkinsondev.cache.util
+package com.atkinsondev.cache.testkit.util
 
 // Getting the plugin files onto the classpath for a Settings plugin requires some trickery,
 // big thanks to GitHub user boazj, who figured out a way - https://github.com/boazj/gradle-testkit-project-dir-issue

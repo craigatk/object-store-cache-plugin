@@ -9,7 +9,7 @@ name: Release Gradle plugin
 jobs:
   build:
     name: Publish Gradle plugin release
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     services:
       objectstorage:
         image: bitnami/minio:2020.8.4-debian-10-r0
@@ -22,22 +22,14 @@ jobs:
           MINIO_SECRET_KEY: minio_secret_key
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
+      - uses: actions/checkout@v3
+
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches/modules-2
-          key: ${{ runner.os }}-gradle-modules-${{ hashFiles('**/*gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-modules-
-
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+          distribution: 'adopt'
+          cache: 'gradle'
 
       - name: Build
         env:
