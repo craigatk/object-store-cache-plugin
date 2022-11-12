@@ -1,4 +1,4 @@
-package com.atkinsondev.cache.util
+package com.atkinsondev.cache.testkit.util
 
 import org.apache.commons.lang3.RandomStringUtils
 import org.junit.rules.TemporaryFolder

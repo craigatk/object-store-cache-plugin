@@ -1,10 +1,10 @@
-package com.atkinsondev.cache
+package com.atkinsondev.cache.testkit
 
-import com.atkinsondev.cache.util.BuildFileWriter
-import com.atkinsondev.cache.util.PluginClasspathData
-import com.atkinsondev.cache.util.PluginClasspathLoader
-import com.atkinsondev.cache.util.SettingsFileWriter
-import com.atkinsondev.cache.util.SourceFileWriter
+import com.atkinsondev.cache.testkit.util.BuildFileWriter
+import com.atkinsondev.cache.testkit.util.PluginClasspathData
+import com.atkinsondev.cache.testkit.util.PluginClasspathLoader
+import com.atkinsondev.cache.testkit.util.SettingsFileWriter
+import com.atkinsondev.cache.testkit.util.SourceFileWriter
 import io.minio.MinioClient
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder

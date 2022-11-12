@@ -1,8 +1,8 @@
-package com.atkinsondev.cache
+package com.atkinsondev.cache.testkit
 
 import com.atkinsondev.cache.service.ObjectStoreBuildCacheServiceFactory
-import com.atkinsondev.cache.util.SettingsFileWriter
-import com.atkinsondev.cache.util.SourceFileWriter
+import com.atkinsondev.cache.testkit.util.SettingsFileWriter
+import com.atkinsondev.cache.testkit.util.SourceFileWriter
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import spock.lang.Unroll
