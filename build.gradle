@@ -104,4 +104,4 @@ task createClasspathManifest {
 }
 test.dependsOn(createClasspathManifest)
 
-tasks.withType(Groovydoc).all { enabled = true }
+tasks.withType(Groovydoc).all { enabled = false }
