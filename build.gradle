@@ -62,7 +62,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'io.github.microutils:kotlin-logging:1.7.9'
 
-    testImplementation('org.spockframework:spock-core:2.1-groovy-3.0')
+    testImplementation('org.spockframework:spock-core:2.3-groovy-4.0')
     testImplementation('org.spockframework:spock-junit4:2.1-groovy-3.0')
     testImplementation "org.apache.commons:commons-lang3:3.8.1"
     testImplementation 'io.minio:minio:6.0.13'
