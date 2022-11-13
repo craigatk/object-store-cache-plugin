@@ -9,8 +9,8 @@ class ObjectStoreCachePlugin : Plugin<Settings> {
         val buildCacheConfiguration = settings.buildCache
 
         buildCacheConfiguration.registerBuildCacheService(
-                ObjectStoreBuildCache::class.java,
-                ObjectStoreBuildCacheServiceFactory::class.java
+            ObjectStoreBuildCache::class.java,
+            ObjectStoreBuildCacheServiceFactory::class.java
         )
     }
 }
