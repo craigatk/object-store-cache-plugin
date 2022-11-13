@@ -15,7 +15,7 @@ First, apply the plugin in `settings.gradle`
 
 ```
 plugins {
-    id "com.atkinsondev.object-store-cache" version "1.3.1"
+    id "com.atkinsondev.object-store-cache" version "1.4.0"
 }
 ```
 
@@ -78,6 +78,8 @@ The plugin is compatible with Gradle `6.1.1` and higher.
 
 ## Changelog
 
+* 1.4.0
+  * Upgrading Kotlin dependency to 1.7.21
 * 1.3.1
   * Upgrading Kotlin dependency to 1.6.20 and build to Gradle 7.5.1
 * 1.2.0
