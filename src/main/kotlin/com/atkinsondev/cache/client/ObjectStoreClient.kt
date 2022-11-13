@@ -21,26 +21,26 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
 
     fun putObject(bucketName: String, objectName: String, size: Long, stream: InputStream) {
         minioClient.putObject(
-                bucketName,
-                objectName,
-                stream,
-                size,
-                null,
-                null,
-                "application/octet-stream"
+            bucketName,
+            objectName,
+            stream,
+            size,
+            null,
+            null,
+            "application/octet-stream"
         )
     }
 
     fun getObject(bucketName: String, objectName: String): InputStream? =
-            try {
-                minioClient.getObject(bucketName, objectName)
-            } catch (e: ErrorResponseException) {
-                null
-            }
+        try {
+            minioClient.getObject(bucketName, objectName)
+        } catch (e: ErrorResponseException) {
+            null
+        }
 
     fun setBucketExpiration(bucketName: String, expirationInDays: Int) {
         val lifecycle = "<LifecycleConfiguration><Rule><ID>expire-bucket</ID><Prefix></Prefix><Status>Enabled</Status>" +
-                "<Expiration><Days>$expirationInDays</Days></Expiration></Rule></LifecycleConfiguration>"
+            "<Expiration><Days>$expirationInDays</Days></Expiration></Rule></LifecycleConfiguration>"
         minioClient.setBucketLifeCycle(bucketName, lifecycle)
     }
 }

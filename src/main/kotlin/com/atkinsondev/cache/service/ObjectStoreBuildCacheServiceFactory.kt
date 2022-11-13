@@ -19,10 +19,10 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
         }
 
         val objectStoreClient = ObjectStoreClient(
-                objectStoreBuildCache.endpoint,
-                accessKey,
-                secretKey,
-                objectStoreBuildCache.region
+            objectStoreBuildCache.endpoint,
+            accessKey,
+            secretKey,
+            objectStoreBuildCache.region
         )
 
         val maybeBuildCacheService = conditionallyCreateBuildCacheService(objectStoreClient, objectStoreBuildCache)

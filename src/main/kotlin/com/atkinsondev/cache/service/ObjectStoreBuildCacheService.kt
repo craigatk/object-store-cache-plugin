@@ -1,12 +1,12 @@
 package com.atkinsondev.cache.service
 
 import com.atkinsondev.cache.client.ObjectStoreClient
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import org.gradle.caching.BuildCacheEntryReader
 import org.gradle.caching.BuildCacheEntryWriter
 import org.gradle.caching.BuildCacheKey
 import org.gradle.caching.BuildCacheService
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 class ObjectStoreBuildCacheService(
     private val bucketName: String,
