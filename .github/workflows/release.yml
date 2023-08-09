@@ -9,7 +9,7 @@ name: Release Gradle plugin
 jobs:
   build:
     name: Publish Gradle plugin release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     services:
       objectstorage:
         image: bitnami/minio:2020.12.29-debian-10-r0
