@@ -65,9 +65,8 @@ class ObjectStoreCacheCrossVersionPluginSpec extends ObjectStoreCachePluginSpecC
 
         where:
         gradleVersion                   || _
-        "6.1.1"                         || _
-        "6.9.1"                         || _
-        "7.0"                           || _
+        "8.0"                           || _
+        "8.4"                           || _
         GradleVersion.current().version || _
     }
 }
