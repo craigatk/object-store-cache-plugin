@@ -21,9 +21,9 @@ class BuildFileWriter {
             }
             
             dependencies {
-                implementation('org.codehaus.groovy:groovy-all:2.5.10')
+                implementation('org.codehaus.groovy:groovy-all:3.0.8')
 
-                testImplementation('org.spockframework:spock-core:1.3-groovy-2.5')
+                testImplementation('org.spockframework:spock-core:2.3-groovy-3.0')
             }
         """.stripIndent()
 
