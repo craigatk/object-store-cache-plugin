@@ -1,5 +1,5 @@
 plugins {
-    id "com.atkinsondev.object-store-cache" version "1.4.0"
+    id "com.atkinsondev.object-store-cache" version "2.0.0-RC-1"
 }
 
 boolean isCI = Boolean.valueOf(System.getenv("GITHUB_ACTIONS"))
