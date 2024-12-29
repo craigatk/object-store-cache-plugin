@@ -10,7 +10,7 @@ class ObjectStoreCachePlugin : Plugin<Settings> {
 
         buildCacheConfiguration.registerBuildCacheService(
             ObjectStoreBuildCache::class.java,
-            ObjectStoreBuildCacheServiceFactory::class.java
+            ObjectStoreBuildCacheServiceFactory::class.java,
         )
     }
 }

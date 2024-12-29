@@ -10,20 +10,24 @@ import org.gradle.caching.BuildCacheServiceFactory
 private val logger = KotlinLogging.logger {}
 
 class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStoreBuildCache> {
-    override fun createBuildCacheService(objectStoreBuildCache: ObjectStoreBuildCache, describer: BuildCacheServiceFactory.Describer): BuildCacheService? {
+    override fun createBuildCacheService(
+        objectStoreBuildCache: ObjectStoreBuildCache,
+        describer: BuildCacheServiceFactory.Describer,
+    ): BuildCacheService? {
         val accessKey = objectStoreBuildCache.accessKey
         val secretKey = objectStoreBuildCache.secretKey
         if (accessKey == null || secretKey == null) {
-            logger.error(missingKeysErrorMessage)
+            logger.error(MISSING_KEYS_ERROR_MESSAGE)
             return null
         }
 
-        val objectStoreClient = ObjectStoreClient(
-            objectStoreBuildCache.endpoint,
-            accessKey,
-            secretKey,
-            objectStoreBuildCache.region
-        )
+        val objectStoreClient =
+            ObjectStoreClient(
+                objectStoreBuildCache.endpoint,
+                accessKey,
+                secretKey,
+                objectStoreBuildCache.region,
+            )
 
         val maybeBuildCacheService = conditionallyCreateBuildCacheService(objectStoreClient, objectStoreBuildCache)
 
@@ -44,7 +48,7 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
 
     private fun conditionallyCreateBuildCacheService(
         objectStoreClient: ObjectStoreClient,
-        objectStoreBuildCache: ObjectStoreBuildCache
+        objectStoreBuildCache: ObjectStoreBuildCache,
     ): ObjectStoreBuildCacheService? =
         try {
             objectStoreClient.bucketExists(objectStoreBuildCache.bucket)
@@ -56,6 +60,6 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
         }
 
     companion object {
-        const val missingKeysErrorMessage = "Missing access key or secret key, disabling object store remote build cache"
+        const val MISSING_KEYS_ERROR_MESSAGE = "Missing access key or secret key, disabling object store remote build cache"
     }
 }
