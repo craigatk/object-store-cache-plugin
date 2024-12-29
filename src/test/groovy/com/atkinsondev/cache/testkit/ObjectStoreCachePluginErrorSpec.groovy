@@ -70,7 +70,7 @@ class ObjectStoreCachePluginErrorSpec extends ObjectStoreCachePluginSpecCase {
         compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
 
         and:
-        compileGroovyResult.output.contains(ObjectStoreBuildCacheServiceFactory.missingKeysErrorMessage)
+        compileGroovyResult.output.contains(ObjectStoreBuildCacheServiceFactory.MISSING_KEYS_ERROR_MESSAGE)
 
         when:
         def testExecutedResult = GradleRunner.create()

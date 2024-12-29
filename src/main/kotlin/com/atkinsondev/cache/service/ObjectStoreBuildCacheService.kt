@@ -10,10 +10,12 @@ import java.io.ByteArrayOutputStream
 
 class ObjectStoreBuildCacheService(
     private val bucketName: String,
-    private val objectStoreClient: ObjectStoreClient
+    private val objectStoreClient: ObjectStoreClient,
 ) : BuildCacheService {
-
-    override fun store(cacheKey: BuildCacheKey, cacheEntryWriter: BuildCacheEntryWriter) {
+    override fun store(
+        cacheKey: BuildCacheKey,
+        cacheEntryWriter: BuildCacheEntryWriter,
+    ) {
         val outputStream = ByteArrayOutputStream()
         cacheEntryWriter.writeTo(outputStream)
         val byteArray = outputStream.toByteArray()
@@ -21,7 +23,10 @@ class ObjectStoreBuildCacheService(
         objectStoreClient.putObject(bucketName, cacheKey.hashCode, byteArray.size.toLong(), ByteArrayInputStream(byteArray))
     }
 
-    override fun load(cacheKey: BuildCacheKey, cacheEntryReader: BuildCacheEntryReader): Boolean {
+    override fun load(
+        cacheKey: BuildCacheKey,
+        cacheEntryReader: BuildCacheEntryReader,
+    ): Boolean {
         val inputStream = objectStoreClient.getObject(bucketName, cacheKey.hashCode)
 
         inputStream?.let { cacheEntryReader.readFrom(it) }
