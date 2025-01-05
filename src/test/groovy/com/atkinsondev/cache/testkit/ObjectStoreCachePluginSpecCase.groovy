@@ -31,7 +31,7 @@ class ObjectStoreCachePluginSpecCase extends Specification {
     @Shared
     String secretKey = "minio_secret_key"
 
-    MinioClient minioClient = new MinioClient(endpoint, accessKey, secretKey)
+    MinioClient minioClient = MinioClient.builder().endpoint(endpoint).credentials(accessKey, secretKey).build()
 
     def setup() {
         BuildFileWriter.writeBuildFile(projectDir)

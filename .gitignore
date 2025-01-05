@@ -15,5 +15,6 @@ out
 target
 
 *.log
+.kotlin
 
 minio
