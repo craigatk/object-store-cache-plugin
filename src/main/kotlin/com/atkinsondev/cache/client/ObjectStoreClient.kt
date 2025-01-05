@@ -1,23 +1,29 @@
 package com.atkinsondev.cache.client
 
-import io.minio.MinioClient
+import io.minio.*
 import io.minio.errors.ErrorResponseException
+import io.minio.messages.*
 import java.io.InputStream
 
 class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, private val region: String? = null) {
-    private val minioClient = MinioClient(endpoint, accessKey, secretKey, region)
+    private val minioClient =
+        MinioClient.builder()
+            .endpoint(endpoint)
+            .credentials(accessKey, secretKey)
+            .region(region)
+            .build()
 
     fun createBucketIfNotExists(bucketName: String) {
         if (!bucketExists(bucketName)) {
             try {
-                minioClient.makeBucket(bucketName, region)
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).region(region).build())
             } catch (e: ErrorResponseException) {
                 throw BucketCreationException("Error creating bucket", e)
             }
         }
     }
 
-    fun bucketExists(bucketName: String) = minioClient.bucketExists(bucketName)
+    fun bucketExists(bucketName: String) = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())
 
     fun putObject(
         bucketName: String,
@@ -26,13 +32,12 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
         stream: InputStream,
     ) {
         minioClient.putObject(
-            bucketName,
-            objectName,
-            stream,
-            size,
-            null,
-            null,
-            "application/octet-stream",
+            PutObjectArgs.builder()
+                .bucket(bucketName)
+                .`object`(objectName)
+                .stream(stream, size, -1)
+                .contentType("application/octet-stream")
+                .build(),
         )
     }
 
@@ -41,7 +46,12 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
         objectName: String,
     ): InputStream? =
         try {
-            minioClient.getObject(bucketName, objectName)
+            minioClient.getObject(
+                GetObjectArgs.builder()
+                    .bucket(bucketName)
+                    .`object`(objectName)
+                    .build(),
+            )
         } catch (e: ErrorResponseException) {
             null
         }
@@ -50,9 +60,22 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
         bucketName: String,
         expirationInDays: Int,
     ) {
-        val lifecycle =
-            "<LifecycleConfiguration><Rule><ID>expire-bucket</ID><Prefix></Prefix><Status>Enabled</Status>" +
-                "<Expiration><Days>$expirationInDays</Days></Expiration></Rule></LifecycleConfiguration>"
-        minioClient.setBucketLifeCycle(bucketName, lifecycle)
+        val expirationResponseData: ResponseDate? = null
+
+        val expirationRule =
+            LifecycleRule(
+                Status.ENABLED,
+                null,
+                Expiration(expirationResponseData, expirationInDays, null),
+                RuleFilter(null, "", null),
+                "expire-bucket",
+                null,
+                null,
+                null,
+            )
+
+        val config = LifecycleConfiguration(listOf(expirationRule))
+
+        minioClient.setBucketLifecycle(SetBucketLifecycleArgs.builder().bucket(bucketName).config(config).build())
     }
 }

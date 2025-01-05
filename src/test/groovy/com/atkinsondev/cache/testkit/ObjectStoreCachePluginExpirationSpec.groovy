@@ -1,6 +1,9 @@
 package com.atkinsondev.cache.testkit
 
 import com.atkinsondev.cache.testkit.util.*
+import io.minio.GetBucketLifecycleArgs
+import io.minio.messages.LifecycleConfiguration
+import io.minio.messages.LifecycleRule
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 
@@ -43,10 +46,13 @@ class ObjectStoreCachePluginExpirationSpec extends ObjectStoreCachePluginSpecCas
         testExecutedResult.task(":test").outcome == TaskOutcome.SUCCESS
 
         when:
-        String bucketLifecycle = minioClient.getBucketLifeCycle(bucketName)
+        LifecycleConfiguration bucketLifecycle = minioClient.getBucketLifecycle(GetBucketLifecycleArgs.builder().bucket(bucketName).build())
 
         then:
-        bucketLifecycle.contains("<Expiration><Days>30</Days></Expiration>")
+        bucketLifecycle.rules().size() == 1
+
+        LifecycleRule rule = bucketLifecycle.rules()[0]
+        rule.expiration().days() == 30
     }
 
     def "when no expiration specified should not set expiration date"() {
@@ -75,9 +81,9 @@ class ObjectStoreCachePluginExpirationSpec extends ObjectStoreCachePluginSpecCas
         compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
 
         when:
-        String bucketLifecycle = minioClient.getBucketLifeCycle(bucketName)
+        LifecycleConfiguration bucketLifecycle = minioClient.getBucketLifecycle(GetBucketLifecycleArgs.builder().bucket(bucketName).build())
 
         then:
-        bucketLifecycle.isEmpty()
+        bucketLifecycle == null
     }
 }
