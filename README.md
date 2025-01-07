@@ -15,7 +15,7 @@ First, apply the plugin in `settings.gradle`
 
 ```
 plugins {
-    id "com.atkinsondev.object-store-cache" version "2.0.0"
+    id "com.atkinsondev.object-store-cache" version "2.1.0"
 }
 ```
 
@@ -74,10 +74,13 @@ All the plugin configuration properties:
 
 ## Compatibility
 
-The plugin is compatible with Gradle `8.0` and higher and Java `17` and higher.
+The plugin is compatible with Gradle `8.4` and higher and Java `17` and higher.
 
 ## Changelog
 
+* 2.1.0
+  * Upgrading to Minio 8
+  * Plugin now requires Gradle 8.4+
 * 2.0.0
   * BREAKING CHANGE: Plugin now requires Java 17+ and Gradle 8+
 * 1.4.0
