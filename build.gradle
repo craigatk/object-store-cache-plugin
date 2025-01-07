@@ -102,4 +102,5 @@ openTelemetryBuild {
             "x-honeycomb-team": System.getenv("HONEYCOMB_API_KEY") ?: project.findProperty('honeycomb_api_key') ?: "",
             "x-honeycomb-dataset": "otel-gradle"
     ]
+    traceViewUrl = "https://ui.honeycomb.io/otel-gradle/environments/dev/datasets/gradle-builds/trace?trace_id={traceId}"
 }
