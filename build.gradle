@@ -94,6 +94,10 @@ task createClasspathManifest {
 }
 test.dependsOn(createClasspathManifest)
 
+// Re-run the tests if one of the Docker config files changes
+test.inputs.file("docker-compose.yml")
+test.inputs.dir(".github/workflows")
+
 tasks.withType(Groovydoc).all { enabled = false }
 
 openTelemetryBuild {
