@@ -53,7 +53,7 @@ dependencies {
 
     testImplementation('org.spockframework:spock-core:2.3-groovy-3.0')
     testImplementation('org.spockframework:spock-junit4:2.3-groovy-3.0')
-    testImplementation "org.apache.commons:commons-lang3:3.17.0"
+    testImplementation "org.apache.commons:commons-lang3:3.18.0"
     testImplementation 'io.minio:minio:8.5.17'
     testImplementation gradleTestKit()
 }
