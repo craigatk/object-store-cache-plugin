@@ -93,3 +93,6 @@ The plugin is compatible with Gradle `8.4` and higher and Java `17` and higher.
   * Improving error message when access or secret key is missing
 * 1.0.0
   * Initial release
+
+# Additional resources
+- blog post: [Find and Fix Bottlenecks in Your Gradle Builds With OpenTelemetry and Honeycomb](https://www.honeycomb.io/blog/gradle-builds-opentelemery-honeycomb)
