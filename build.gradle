@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+
 buildscript {
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
@@ -18,12 +21,10 @@ plugins {
 
 sourceCompatibility = 17
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "17"
-}
-
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "17"
+kotlin {
+  compilerOptions {
+    jvmTarget = JvmTarget.JVM_17
+  }
 }
 
 gradlePlugin {
