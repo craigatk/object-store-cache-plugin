@@ -9,7 +9,7 @@ import org.gradle.testkit.runner.TaskOutcome
 class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
     String bucketName = "testbucket"
 
-    def "when re-using cached source class files in second build with tests should work"() {
+    def "when re-using cached source class files in second build with tests should work"(String gradleVersion) {
         given:
         SourceFileWriter.writeSourceAndSpecFiles(sourceDirectory, testDirectory)
 
@@ -23,6 +23,7 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
 
         when:
         def compileGroovyResult = GradleRunner.create()
+                .withGradleVersion(gradleVersion)
                 .withProjectDir(projectDir.root)
                 .withArguments('compileGroovy', '--build-cache')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
@@ -35,6 +36,7 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
 
         when:
         def testExecutedResult = GradleRunner.create()
+                .withGradleVersion(gradleVersion)
                 .withProjectDir(projectDir.root)
                 .withArguments('clean', 'test', '--build-cache')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
@@ -48,6 +50,7 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
 
         when:
         def testFromCacheResult = GradleRunner.create()
+                .withGradleVersion(gradleVersion)
                 .withProjectDir(projectDir.root)
                 .withArguments('clean', 'test', '--build-cache')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
@@ -56,5 +59,8 @@ class ObjectStoreCachePluginSpec extends ObjectStoreCachePluginSpecCase {
         then:
         testFromCacheResult.task(":compileGroovy").outcome == TaskOutcome.FROM_CACHE
         testFromCacheResult.task(":test").outcome == TaskOutcome.FROM_CACHE
+
+        where:
+        gradleVersion << ["8.14", "9.0.0"]
     }
 }
