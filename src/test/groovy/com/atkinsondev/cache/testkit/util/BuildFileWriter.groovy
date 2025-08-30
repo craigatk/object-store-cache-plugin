@@ -8,7 +8,7 @@ class BuildFileWriter {
         buildFile << """
             buildscript {
                 repositories {
-                    jcenter()
+                    mavenCentral()
                 }
             }
 
@@ -17,13 +17,20 @@ class BuildFileWriter {
             }
             
             repositories {
-                jcenter()
+                mavenCentral()
             }
             
             dependencies {
                 implementation('org.codehaus.groovy:groovy-all:3.0.8')
 
                 testImplementation('org.spockframework:spock-core:2.3-groovy-3.0')
+
+                testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+                testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+            }
+            
+            test {
+                useJUnitPlatform()
             }
         """.stripIndent()
 
