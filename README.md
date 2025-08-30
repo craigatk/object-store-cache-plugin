@@ -1,6 +1,6 @@
 # Object store Gradle build cache plugin
 
-Plugin to use an S3-compatible object store as the backend for a Gradle remote build cache.
+Plugin to use an S3-compatible object store as the backend for a Gradle remote [build cache](https://docs.gradle.org/current/userguide/build_cache.html).
 
 The plugin uses the [Minio Java SDK](https://github.com/minio/minio-java) to communicate to the object store so it should work with
 any S3-compatible object store like Amazon S3, Digital Ocean Spaces, etc. I use it with Digital Ocean Spaces,
