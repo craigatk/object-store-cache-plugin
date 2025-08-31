@@ -15,7 +15,7 @@ First, apply the plugin in `settings.gradle`
 
 ```
 plugins {
-    id "com.atkinsondev.object-store-cache" version "2.1.0"
+    id "com.atkinsondev.object-store-cache" version "3.0.0"
 }
 ```
 
@@ -75,10 +75,14 @@ All the plugin configuration properties:
 
 ## Compatibility
 
-The plugin is compatible with Gradle `8.4` and higher and Java `17` and higher.
+The plugin is compatible with Gradle `8.4` and higher and Java `21` and higher.
 
 ## Changelog
 
+* 3.0.0
+  * Plugin now requires Java 21+
+  * Built with Gradle 9
+  * Missing cache access key or secret key now fail build (required due to API changes in Gradle 9). Add `enabled = cacheAccessKey && cacheSecretKey` to the plugin Gradle config to disable the remote cache if those fields are not available.  
 * 2.1.0
   * Upgrading to Minio 8
   * Plugin now requires Gradle 8.4+
