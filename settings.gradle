@@ -18,5 +18,6 @@ buildCache {
         autoCreateBucket = true
         expirationInDays = 10
         push = isCI
+        enabled = cacheAccessKey && cacheSecretKey
     }
 }

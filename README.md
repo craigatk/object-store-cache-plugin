@@ -42,6 +42,7 @@ buildCache {
         secretKey = cacheSecretKey
         bucket = '<bucket_name>'
         push = isCI
+        enabled = cacheAccessKey && cacheSecretKey
     }
 }
 ```
