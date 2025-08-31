@@ -21,9 +21,9 @@ class BuildFileWriter {
             }
             
             dependencies {
-                implementation('org.codehaus.groovy:groovy-all:3.0.8')
+                implementation('org.apache.groovy:groovy-all:4.0.28')
 
-                testImplementation('org.spockframework:spock-core:2.3-groovy-3.0')
+                testImplementation('org.spockframework:spock-core:2.3-groovy-4.0')
 
                 testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
                 testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

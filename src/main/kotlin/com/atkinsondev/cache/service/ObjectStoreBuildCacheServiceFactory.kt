@@ -4,6 +4,7 @@ import com.atkinsondev.cache.ObjectStoreBuildCache
 import com.atkinsondev.cache.client.BucketMissingException
 import com.atkinsondev.cache.client.ObjectStoreClient
 import mu.KotlinLogging
+import org.gradle.caching.BuildCacheException
 import org.gradle.caching.BuildCacheService
 import org.gradle.caching.BuildCacheServiceFactory
 
@@ -13,12 +14,12 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
     override fun createBuildCacheService(
         objectStoreBuildCache: ObjectStoreBuildCache,
         describer: BuildCacheServiceFactory.Describer,
-    ): BuildCacheService? {
+    ): BuildCacheService {
         val accessKey = objectStoreBuildCache.accessKey
         val secretKey = objectStoreBuildCache.secretKey
         if (accessKey == null || secretKey == null) {
             logger.error(MISSING_KEYS_ERROR_MESSAGE)
-            return null
+            throw IllegalArgumentException(MISSING_KEYS_ERROR_MESSAGE)
         }
 
         val objectStoreClient =
@@ -29,34 +30,35 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
                 objectStoreBuildCache.region,
             )
 
-        val maybeBuildCacheService = conditionallyCreateBuildCacheService(objectStoreClient, objectStoreBuildCache)
+        val buildCacheService = createBuildCacheService(objectStoreClient, objectStoreBuildCache)
 
-        if (maybeBuildCacheService != null) {
-            if (objectStoreBuildCache.autoCreateBucket) {
-                objectStoreClient.createBucketIfNotExists(objectStoreBuildCache.bucket)
-            } else if (!objectStoreClient.bucketExists(objectStoreBuildCache.bucket)) {
-                throw BucketMissingException(objectStoreBuildCache.bucket)
-            }
-
-            objectStoreBuildCache.expirationInDays?.let {
-                objectStoreClient.setBucketExpiration(objectStoreBuildCache.bucket, it)
-            }
+        if (objectStoreBuildCache.autoCreateBucket) {
+            objectStoreClient.createBucketIfNotExists(objectStoreBuildCache.bucket)
+        } else if (!objectStoreClient.bucketExists(objectStoreBuildCache.bucket)) {
+            throw BucketMissingException(objectStoreBuildCache.bucket)
         }
 
-        return maybeBuildCacheService
+        objectStoreBuildCache.expirationInDays?.let {
+            objectStoreClient.setBucketExpiration(objectStoreBuildCache.bucket, it)
+        }
+
+        return buildCacheService
     }
 
-    private fun conditionallyCreateBuildCacheService(
+    private fun createBuildCacheService(
         objectStoreClient: ObjectStoreClient,
         objectStoreBuildCache: ObjectStoreBuildCache,
-    ): ObjectStoreBuildCacheService? =
+    ): ObjectStoreBuildCacheService =
         try {
             objectStoreClient.bucketExists(objectStoreBuildCache.bucket)
 
             ObjectStoreBuildCacheService(objectStoreBuildCache.bucket, objectStoreClient)
         } catch (e: Exception) {
-            logger.error("Error connecting to build cache object store ${objectStoreBuildCache.endpoint}, remote cache disabled", e)
-            null
+            logger.error("Error connecting to build cache object store ${objectStoreBuildCache.endpoint}", e)
+            throw BuildCacheException(
+                "Error connecting to build cache object store ${objectStoreBuildCache.endpoint}",
+                e,
+            )
         }
 
     companion object {

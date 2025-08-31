@@ -42,6 +42,7 @@ class SettingsFileWriter {
                 autoCreateBucket = true
                 push = true
                 ${additionalConfig}
+                enabled = accessKey && secretKey
             }
         }
         """.stripIndent()

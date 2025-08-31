@@ -77,11 +77,6 @@ class ObjectStoreBuildCacheServiceSpec extends Specification {
             byte[] toByteArray() {
                 return new byte[0]
             }
-
-            @Override
-            String getDisplayName() {
-                return null
-            }
         }
     }
 }

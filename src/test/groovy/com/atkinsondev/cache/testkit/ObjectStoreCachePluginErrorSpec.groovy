@@ -10,7 +10,7 @@ import spock.lang.Unroll
 class ObjectStoreCachePluginErrorSpec extends ObjectStoreCachePluginSpecCase {
     String bucketName = "errorbucket"
 
-    def "when connecting to object store host fails should disable cache and not fail build"() {
+    def "when connecting to object store host fails should fail build"() {
         given:
         SourceFileWriter.writeSourceAndSpecFiles(sourceDirectory, testDirectory)
 
@@ -27,21 +27,10 @@ class ObjectStoreCachePluginErrorSpec extends ObjectStoreCachePluginSpecCase {
                 .withProjectDir(projectDir.root)
                 .withArguments('compileGroovy', '--build-cache', '--stacktrace')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
-                .build()
+                .buildAndFail()
 
         then:
-        compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
-
-        when:
-        def testExecutedResult = GradleRunner.create()
-                .withProjectDir(projectDir.root)
-                .withArguments('clean', 'test', '--build-cache')
-                .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
-                .build()
-
-        then:
-        testExecutedResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
-        testExecutedResult.task(":test").outcome == TaskOutcome.SUCCESS
+        compileGroovyResult.output.contains("Error connecting to build cache object store")
     }
 
     @Unroll
@@ -68,9 +57,6 @@ class ObjectStoreCachePluginErrorSpec extends ObjectStoreCachePluginSpecCase {
 
         then:
         compileGroovyResult.task(":compileGroovy").outcome == TaskOutcome.SUCCESS
-
-        and:
-        compileGroovyResult.output.contains(ObjectStoreBuildCacheServiceFactory.MISSING_KEYS_ERROR_MESSAGE)
 
         when:
         def testExecutedResult = GradleRunner.create()
