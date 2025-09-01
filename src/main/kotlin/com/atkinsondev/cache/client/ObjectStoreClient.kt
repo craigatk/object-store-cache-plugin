@@ -5,9 +5,15 @@ import io.minio.errors.ErrorResponseException
 import io.minio.messages.*
 import java.io.InputStream
 
-class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, private val region: String? = null) {
+class ObjectStoreClient(
+    endpoint: String,
+    accessKey: String,
+    secretKey: String,
+    private val region: String? = null,
+) {
     private val minioClient =
-        MinioClient.builder()
+        MinioClient
+            .builder()
             .endpoint(endpoint)
             .credentials(accessKey, secretKey)
             .region(region)
@@ -16,7 +22,13 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
     fun createBucketIfNotExists(bucketName: String) {
         if (!bucketExists(bucketName)) {
             try {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).region(region).build())
+                minioClient.makeBucket(
+                    MakeBucketArgs
+                        .builder()
+                        .bucket(bucketName)
+                        .region(region)
+                        .build(),
+                )
             } catch (e: ErrorResponseException) {
                 throw BucketCreationException("Error creating bucket", e)
             }
@@ -32,7 +44,8 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
         stream: InputStream,
     ) {
         minioClient.putObject(
-            PutObjectArgs.builder()
+            PutObjectArgs
+                .builder()
                 .bucket(bucketName)
                 .`object`(objectName)
                 .stream(stream, size, -1)
@@ -47,7 +60,8 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
     ): InputStream? =
         try {
             minioClient.getObject(
-                GetObjectArgs.builder()
+                GetObjectArgs
+                    .builder()
                     .bucket(bucketName)
                     .`object`(objectName)
                     .build(),
@@ -76,6 +90,12 @@ class ObjectStoreClient(endpoint: String, accessKey: String, secretKey: String, 
 
         val config = LifecycleConfiguration(listOf(expirationRule))
 
-        minioClient.setBucketLifecycle(SetBucketLifecycleArgs.builder().bucket(bucketName).config(config).build())
+        minioClient.setBucketLifecycle(
+            SetBucketLifecycleArgs
+                .builder()
+                .bucket(bucketName)
+                .config(config)
+                .build(),
+        )
     }
 }
