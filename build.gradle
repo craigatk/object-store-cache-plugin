@@ -54,7 +54,7 @@ dependencies {
     testImplementation('org.spockframework:spock-junit4:2.3-groovy-4.0')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation "org.apache.commons:commons-lang3:3.18.0"
+    testImplementation "org.apache.commons:commons-lang3:3.19.0"
     testImplementation 'io.minio:minio:8.5.17'
     testImplementation gradleTestKit()
 }
