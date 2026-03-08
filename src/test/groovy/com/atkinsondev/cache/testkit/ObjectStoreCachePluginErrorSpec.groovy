@@ -1,6 +1,5 @@
 package com.atkinsondev.cache.testkit
 
-import com.atkinsondev.cache.service.ObjectStoreBuildCacheServiceFactory
 import com.atkinsondev.cache.testkit.util.SettingsFileWriter
 import com.atkinsondev.cache.testkit.util.SourceFileWriter
 import org.gradle.testkit.runner.GradleRunner
@@ -10,7 +9,7 @@ import spock.lang.Unroll
 class ObjectStoreCachePluginErrorSpec extends ObjectStoreCachePluginSpecCase {
     String bucketName = "errorbucket"
 
-    def "when connecting to object store host fails should fail build"() {
+    def "when connecting to object store host fails should not fail build"() {
         given:
         SourceFileWriter.writeSourceAndSpecFiles(sourceDirectory, testDirectory)
 
@@ -27,10 +26,10 @@ class ObjectStoreCachePluginErrorSpec extends ObjectStoreCachePluginSpecCase {
                 .withProjectDir(projectDir.root)
                 .withArguments('compileGroovy', '--build-cache', '--stacktrace')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
-                .buildAndFail()
+                .build()
 
         then:
-        compileGroovyResult.output.contains("Error connecting to build cache object store")
+        compileGroovyResult.output.contains("org.gradle.caching.BuildCacheException: invalidhostname")
     }
 
     @Unroll
