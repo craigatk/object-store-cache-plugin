@@ -1,10 +1,8 @@
 package com.atkinsondev.cache.service
 
 import com.atkinsondev.cache.ObjectStoreBuildCache
-import com.atkinsondev.cache.client.BucketMissingException
 import com.atkinsondev.cache.client.ObjectStoreClient
 import mu.KotlinLogging
-import org.gradle.caching.BuildCacheException
 import org.gradle.caching.BuildCacheService
 import org.gradle.caching.BuildCacheServiceFactory
 
@@ -30,13 +28,8 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
                 objectStoreBuildCache.region,
             )
 
-        val buildCacheService = createBuildCacheService(objectStoreClient, objectStoreBuildCache)
-
-        if (objectStoreBuildCache.autoCreateBucket) {
-            objectStoreClient.createBucketIfNotExists(objectStoreBuildCache.bucket)
-        } else if (!objectStoreClient.bucketExists(objectStoreBuildCache.bucket)) {
-            throw BucketMissingException(objectStoreBuildCache.bucket)
-        }
+        val buildCacheService =
+            ObjectStoreBuildCacheService(objectStoreBuildCache.bucket, objectStoreClient, objectStoreBuildCache.autoCreateBucket)
 
         objectStoreBuildCache.expirationInDays?.let {
             objectStoreClient.setBucketExpiration(objectStoreBuildCache.bucket, it)
@@ -44,22 +37,6 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
 
         return buildCacheService
     }
-
-    private fun createBuildCacheService(
-        objectStoreClient: ObjectStoreClient,
-        objectStoreBuildCache: ObjectStoreBuildCache,
-    ): ObjectStoreBuildCacheService =
-        try {
-            objectStoreClient.bucketExists(objectStoreBuildCache.bucket)
-
-            ObjectStoreBuildCacheService(objectStoreBuildCache.bucket, objectStoreClient)
-        } catch (e: Exception) {
-            logger.error("Error connecting to build cache object store ${objectStoreBuildCache.endpoint}", e)
-            throw BuildCacheException(
-                "Error connecting to build cache object store ${objectStoreBuildCache.endpoint}",
-                e,
-            )
-        }
 
     companion object {
         const val MISSING_KEYS_ERROR_MESSAGE = "Missing access key or secret key, disabling object store remote build cache"
