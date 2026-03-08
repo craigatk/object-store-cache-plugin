@@ -79,6 +79,8 @@ The plugin is compatible with Gradle `8.4` and higher and Java `21` and higher.
 
 ## Changelog
 
+* 3.1.0
+  * Making plugin more resilient to remote cache connection issues
 * 3.0.0
   * Plugin now requires Java 21+
   * Built with Gradle 9
