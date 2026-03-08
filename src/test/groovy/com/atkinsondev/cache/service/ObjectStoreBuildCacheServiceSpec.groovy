@@ -23,7 +23,7 @@ class ObjectStoreBuildCacheServiceSpec extends Specification {
     )
 
     @Subject
-    ObjectStoreBuildCacheService objectStoreBuildCacheService = new ObjectStoreBuildCacheService(bucketName, objectStoreClient, true)
+    ObjectStoreBuildCacheService objectStoreBuildCacheService = new ObjectStoreBuildCacheService(bucketName, objectStoreClient, true, null)
 
     def "should write then read file from cache"() {
         given:

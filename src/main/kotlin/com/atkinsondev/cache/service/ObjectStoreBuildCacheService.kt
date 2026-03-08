@@ -1,5 +1,6 @@
 package com.atkinsondev.cache.service
 
+import com.atkinsondev.cache.client.BucketMissingException
 import com.atkinsondev.cache.client.ObjectStoreClient
 import org.gradle.caching.BuildCacheEntryReader
 import org.gradle.caching.BuildCacheEntryWriter
@@ -8,12 +9,12 @@ import org.gradle.caching.BuildCacheKey
 import org.gradle.caching.BuildCacheService
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import kotlin.RuntimeException
 
 class ObjectStoreBuildCacheService(
     private val bucketName: String,
     private val objectStoreClient: ObjectStoreClient,
     private val autoCreateBucket: Boolean,
+    private val expirationInDays: Int?,
 ) : BuildCacheService {
     private var bucketChecked: Boolean = false
 
@@ -62,13 +63,17 @@ class ObjectStoreBuildCacheService(
 
     private fun checkBucket() {
         if (!bucketChecked) {
+            bucketChecked = true
+
             if (autoCreateBucket) {
                 objectStoreClient.createBucketIfNotExists(bucketName)
             } else if (!objectStoreClient.bucketExists(bucketName)) {
-                throw RuntimeException(bucketName)
+                throw BucketMissingException(bucketName)
             }
 
-            bucketChecked = true
+            expirationInDays?.let {
+                objectStoreClient.setBucketExpiration(bucketName, it)
+            }
         }
     }
 }

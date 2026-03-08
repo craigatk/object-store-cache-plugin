@@ -29,11 +29,7 @@ class ObjectStoreBuildCacheServiceFactory : BuildCacheServiceFactory<ObjectStore
             )
 
         val buildCacheService =
-            ObjectStoreBuildCacheService(objectStoreBuildCache.bucket, objectStoreClient, objectStoreBuildCache.autoCreateBucket)
-
-        objectStoreBuildCache.expirationInDays?.let {
-            objectStoreClient.setBucketExpiration(objectStoreBuildCache.bucket, it)
-        }
+            ObjectStoreBuildCacheService(objectStoreBuildCache.bucket, objectStoreClient, objectStoreBuildCache.autoCreateBucket, objectStoreBuildCache.expirationInDays)
 
         return buildCacheService
     }

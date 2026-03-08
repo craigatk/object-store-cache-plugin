@@ -27,7 +27,7 @@ class ObjectStoreCachePluginExpirationSpec extends ObjectStoreCachePluginSpecCas
         when:
         def compileGroovyResult = GradleRunner.create()
                 .withProjectDir(projectDir.root)
-                .withArguments('compileGroovy', '--build-cache')
+                .withArguments('compileGroovy', '--build-cache', '--stacktrace')
                 .withPluginClasspath(pluginClasspathData.pluginClasspathFiles)
                 .build()
 
