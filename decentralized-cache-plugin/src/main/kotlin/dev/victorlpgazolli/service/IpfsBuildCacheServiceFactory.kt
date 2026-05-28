@@ -3,26 +3,33 @@ package dev.victorlpgazolli.service
 import dev.victorlpgazolli.DecentralizedConfiguration
 import dev.victorlpgazolli.client.CacheManifest
 import dev.victorlpgazolli.client.IpfsClient
+import dev.victorlpgazolli.utils.QuietLogger
 import dev.victorlpgazolli.utils.SimpleLogger
 import org.gradle.caching.BuildCacheService
 import org.gradle.caching.BuildCacheServiceFactory
 
-private val LOG_TAG = "[decentralized-cache]"
+private const val LOG_TAG = "[decentralized-cache]"
 internal class IpfsBuildCacheServiceFactory : BuildCacheServiceFactory<DecentralizedConfiguration> {
     override fun createBuildCacheService(
         decentralizedConfiguration: DecentralizedConfiguration,
         describer: BuildCacheServiceFactory.Describer,
     ): BuildCacheService {
-        println("$LOG_TAG creating build cache service")
 
-        val logger = SimpleLogger()
+        val logger = if(decentralizedConfiguration.verbose) {
+            SimpleLogger()
+        } else {
+            QuietLogger()
+        }
+
+        logger.log(LOG_TAG, "IpfsBuildCacheServiceFactory", "creating build cache service")
+
         val ipfsClient = IpfsClient(
             configuration = decentralizedConfiguration,
             cacheManifest = CacheManifest(logger),
             logger = logger
         )
 
-       println("$LOG_TAG Using ipfs client with version ${ipfsClient.version}")
+        logger.log(LOG_TAG, "IpfsBuildCacheServiceFactory", "host=${ipfsClient.hostBaseUrl ?: "default"}; version=${ipfsClient.version}")
 
         return IpfsBuildCacheService(
             ipfsClient = ipfsClient,

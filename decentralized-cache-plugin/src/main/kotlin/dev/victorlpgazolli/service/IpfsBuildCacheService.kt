@@ -11,7 +11,7 @@ import java.io.FileOutputStream
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
-private val LOG_TAG = "[decentralized-cache]"
+private const val LOG_TAG = "[decentralized-cache]"
 internal class IpfsBuildCacheService(
     private val ipfsClient: IpfsClient,
     private val logger: Logger,
@@ -20,13 +20,15 @@ internal class IpfsBuildCacheService(
         cacheKey: BuildCacheKey,
         cacheEntryWriter: BuildCacheEntryWriter,
     ) {
-        logger.log(LOG_TAG, cacheKey.hashCode, "Storing cache entry")
+        val path = "/tmp/ipfs-cache-${cacheKey.hashCode}.gz"
+        logger.log(LOG_TAG, cacheKey.hashCode, "Storing cache entry at $path")
 
-        val compressedFile = File("/tmp/ipfs-cache-${cacheKey.hashCode}.gz").apply {
+        val compressedFile = File(path).apply {
             createNewFile()
             deleteOnExit()
         }
 
+        logger.log(LOG_TAG, cacheKey.hashCode, "Writing to $path")
         GZIPOutputStream(FileOutputStream(compressedFile)).use { gzipOutputStream ->
             cacheEntryWriter.writeTo(gzipOutputStream)
             gzipOutputStream.flush()

@@ -6,7 +6,7 @@ plugins {
 }
 
 val projectGroupId = "dev.victorlpgazolli.decentralized-cache-plugin"
-val versionNumber = "1.0.0"
+val versionNumber = "1.1.0"
 
 group = "dev.victorlpgazolli"
 version = versionNumber

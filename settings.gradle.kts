@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "decentralized-cache-plugin"
 
 include(rootProject.name)
+include("sample")

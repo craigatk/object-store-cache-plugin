@@ -19,3 +19,10 @@ class SimpleLogger: Logger {
         )
     }
 }
+class QuietLogger: Logger {
+    override fun log(
+        logTag: String,
+        context: String,
+        message: String
+    ) {}
+}

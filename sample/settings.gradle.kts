@@ -15,7 +15,7 @@ dependencyResolutionManagement {
     }
 }
 plugins {
-    id("dev.victorlpgazolli.decentralized-cache-plugin") version "1.0.0"
+    id("dev.victorlpgazolli.decentralized-cache-plugin") version "1.1.0"
 }
 
 buildCache {
@@ -25,6 +25,7 @@ buildCache {
         isEnabled = true
         isPush    = true
         baseIpns = "/ipns/gradle.victorlpgazolli.dev"
+        verbose = true
     }
 }
 

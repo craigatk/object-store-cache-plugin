@@ -11,7 +11,7 @@ import okhttp3.ResponseBody
 import java.io.File
 import java.io.InputStream
 
-val LOG_TAG = "[decentralized-cache]"
+private const val LOG_TAG = "[decentralized-cache]"
 
 internal class IpfsClient (
     val configuration: DecentralizedConfiguration,
@@ -154,7 +154,6 @@ class Mfs(val ipfs: IPFSConnection, val logger: Logger) {
             }
         }.onFailure {
             logger.log(LOG_TAG, "copy", " failed to copy $from to $to")
-            println(it.message)
         }.onSuccess {
             logger.log(LOG_TAG, "copy", " copied $from to $to")
         }
