@@ -1,6 +1,6 @@
 services:
   objectstorage:
-    image: rustfs/rustfs:1.0.4
+    image: rustfs/rustfs:1.0.5
     ports:
       - "9000:9000"
     volumes:
